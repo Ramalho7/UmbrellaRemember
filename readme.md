@@ -34,6 +34,7 @@ Crie um arquivo `.env` na raiz do projeto:
 
 ```env
 OPENWEATHER_API_KEY=sua_chave_api_aqui
+NTFY_CHANNEL=https://ntfy.sh/SeuTopicoPersonalizado
 ```
 
 ### 4. Configuração no GitHub
