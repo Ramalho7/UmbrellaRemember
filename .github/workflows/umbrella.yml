@@ -1,0 +1,22 @@
+name: Umbrella Reminder
+
+on:
+  schedule:
+    - cron: '0 09 * * *'  # Executa todo dia às 06:00 (UTC-3 = 09:00 UTC)
+  workflow_dispatch:
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install dependencies
+        run: pip install requests python-dotenv
+      - name: Run script
+        env:
+          OPENWEATHER_API_KEY: ${{ secrets.OPENWEATHER_API_KEY }}
+        run: python umbrellaRemember.py
