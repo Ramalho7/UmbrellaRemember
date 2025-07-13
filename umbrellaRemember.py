@@ -6,9 +6,9 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-CITY = 'Joao Pessoa'
-STATE_CODE = 'Paraiba'
-COUNTY_CODE = 'BR'
+CITY = os.getenv('CITY')
+STATE_CODE = os.getenv('STATE_CODE')
+COUNTY_CODE = os.getenv('COUNTY_CODE')
 API_KEY = os.getenv('OPENWEATHER_API_KEY')
 NTFY_CHANNEL = os.getenv('NTFY_CHANNEL')
 

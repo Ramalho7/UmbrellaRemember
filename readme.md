@@ -12,7 +12,15 @@ O **Umbrella Remember** é um script Python que:
 
 ## 🏙️ Localização
 
-Atualmente configurado para **João Pessoa, Paraíba, Brasil**.
+Para configurar a localização da cidade, é necessário criar um arquivo `.env` na raiz do projeto. Este arquivo deve conter as seguintes variáveis:
+
+```env
+CITY=SuaCidade
+STATE_CODE=SeuEstado
+COUNTY_CODE=BR  # Código do país (exemplo: BR para Brasil)
+```
+
+Substitua `SuaCidade`, `SeuEstado` e `BR` pelos valores correspondentes à sua localização. Essas variáveis serão usadas pelo script para consultar a previsão do tempo na API do OpenWeatherMap.
 
 ## 🔧 Configuração
 
@@ -94,7 +102,7 @@ UmbrellaRemember/
 ## ⚙️ Funcionamento
 
 1. **6h da manhã**: GitHub Actions executa o script automaticamente
-2. **Geocodificação**: Converte "João Pessoa" em coordenadas (lat/lon)
+2. **Geocodificação**: Converte "CITY" em coordenadas (lat/lon)
 3. **Previsão**: Consulta API do OpenWeatherMap para previsão do dia
 4. **Análise**: Verifica se há chuva prevista para hoje
 5. **Notificação**: Envia alerta via ntfy.sh
