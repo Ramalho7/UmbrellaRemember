@@ -26,7 +26,7 @@ Substitua `SuaCidade`, `SeuEstado` e `BR` pelos valores correspondentes à sua l
 
 ### 1. Pré-requisitos
 
-- Python 3.11+
+- Python 3.13+
 - Conta no [OpenWeatherMap](https://openweathermap.org/api) (gratuita)
 - Repositório no GitHub (para automação)
 

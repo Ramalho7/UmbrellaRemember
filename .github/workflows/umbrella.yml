@@ -2,7 +2,8 @@ name: Umbrella Reminder
 
 on:
   schedule:
-    - cron: '0 09 * * *'  # Executa todo dia às 06:00 (UTC-3 = 09:00 UTC)
+    - cron: '0 09 * * *' 
+    # Executa todo dia às 06:00 (UTC-3 = 09:00 UTC)
   workflow_dispatch:
 
 jobs:
@@ -19,4 +20,9 @@ jobs:
       - name: Run script
         env:
           OPENWEATHER_API_KEY: ${{ secrets.OPENWEATHER_API_KEY }}
+          CITY: ${{ secrets.CITY }}
+          STATE_CODE: ${{ secrets.STATE_CODE }}
+          COUNTY_CODE: ${{ secrets.COUNTY_CODE }}
+          NTFY_CHANNEL: ${{ secrets.NTFY_CHANNEL }}
+
         run: python umbrellaRemember.py
