@@ -16,7 +16,7 @@ jobs:
         with:
           python-version: '3.13'
       - name: Install dependencies
-        run: pip install requests python-dotenv
+        run: pip install requests python-dotenv ezgmail
       - name: Run script
         env:
           OPENWEATHER_API_KEY: ${{ secrets.OPENWEATHER_API_KEY }}
