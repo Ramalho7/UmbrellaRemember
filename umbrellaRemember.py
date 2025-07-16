@@ -3,7 +3,9 @@ import json
 import os, sys
 from datetime import datetime
 from dotenv import load_dotenv
+import ezgmail
 
+ezgmail.init()
 load_dotenv()
 
 CITY = os.getenv('CITY')
@@ -39,14 +41,38 @@ def checkRainToday():
             weather = forecast['weather'][0]['main'].lower()
             if 'rain' in weather or 'chuva' in weather:
                 rain_today = True
+                
+    recipients = os.getenv('RECIPIENTS').split(',')
+    recipients = [email.strip() for email in recipients]
     
     if rain_today:
+        html_body = """
+        <div style="text-align:center; font-family:Roboto, sans-serif; padding:20px;">
+            <h1 style="color:blue;">☂️ Importante: Chuva HOJE!</h1>
+            <p style="font-size:18px;">Olá,</p>
+            <p style="font-size:16px;">Há previsão de chuva para hoje. Não se esqueça de levar um guarda-chuva!</p>
+            <img src="https://unsplash.com/photos/a-black-and-white-photo-of-raindrops-in-a-puddle-pWzH7qOBpb0" alt="Guarda-chuva" style="width:100%; max-width:600px; margin:20px auto; border-radius:10px; height:300px;">
+            <p style="font-size:14px; color:gray;">Atenciosamente,<br><strong>Umbrella Remember</strong></p>
+        </div>
+        """
+        ezgmail.send(recipients, 'Leve um guarda-chuva!', html_body, mimeSubtype='html')
         requests.post(
             NTFY_CHANNEL,
             data='Leve um guarda-chuva!',
             headers={'Title': 'Importante: Chuva HOJE!', 'Tags': 'warning, rain', 'Priority': '5'}
         )
     else:
+        html_body = """
+        <div style="text-align:center; font-family:Roboto, sans-serif; padding:20px; background-color:#f9f9f9; border-radius:10px;">
+        <img src="https://images.unsplash.com/photo-1464660439080-b79116909ce7?q=80&w=1502&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Dia ensolarado" style="width:100%; max-width:600px; margin:20px auto; border-radius:10px; height:300px;">
+            <h1 style="color:green;">☀️ Sem previsão de chuva hoje!</h1>
+            <p style="font-size:18px;">Olá,</p>
+            <p style="font-size:16px;">Hoje o dia estará limpo e ensolarado. Aproveite o dia ao máximo!</p>
+            <p style="font-size:14px; color:gray;">Atenciosamente,<br><strong>Umbrella Remember</strong></p>
+        </div>
+        """
+        for recipient in recipients:
+            ezgmail.send(recipient, 'Dia de sol!', html_body, mimeSubtype='html')
         requests.post(
             NTFY_CHANNEL,
             data='Sem chuva para hoje!'
