@@ -17,6 +17,8 @@ jobs:
           python-version: '3.13'
       - name: Install dependencies
         run: pip install requests python-dotenv ezgmail
+      - name: Decode token.json
+        run: echo "${{ secrets.EZGMAIL_TOKEN_BASE64 }}" | base64 -d > token.json
       - name: Run script
         env:
           OPENWEATHER_API_KEY: ${{ secrets.OPENWEATHER_API_KEY }}
@@ -24,6 +26,5 @@ jobs:
           STATE_CODE: ${{ secrets.STATE_CODE }}
           COUNTY_CODE: ${{ secrets.COUNTY_CODE }}
           NTFY_CHANNEL: ${{ secrets.NTFY_CHANNEL }}
-          RECIPIENTS: ${{secrets.RECIPIENTS}}
-
+          RECIPIENTS: ${{ secrets.RECIPIENTS }}
         run: python umbrellaRemember.py
