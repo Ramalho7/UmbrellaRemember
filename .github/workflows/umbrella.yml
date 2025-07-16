@@ -24,5 +24,6 @@ jobs:
           STATE_CODE: ${{ secrets.STATE_CODE }}
           COUNTY_CODE: ${{ secrets.COUNTY_CODE }}
           NTFY_CHANNEL: ${{ secrets.NTFY_CHANNEL }}
+          RECIPIENTS: ${{secrets.RECIPIENTS}}
 
         run: python umbrellaRemember.py
