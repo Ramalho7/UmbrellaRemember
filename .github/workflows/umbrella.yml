@@ -16,10 +16,6 @@ jobs:
           python-version: '3.13'
       - name: Install dependencies
         run: pip install requests python-dotenv ezgmail
-      - name: Create credentials-sheets.json
-        run: echo "${{ secrets.CREDENTIALS_JSON }}" > credentials-sheets.json
-      - name: Decode token.json
-        run: echo "${{ secrets.EZGMAIL_TOKEN_BASE64 }}" | base64 -d > token.json
       - name: Run script
         env:
           OPENWEATHER_API_KEY: ${{ secrets.OPENWEATHER_API_KEY }}

@@ -48,14 +48,15 @@ def checkRainToday():
     if rain_today:
         html_body = """
         <div style="text-align:center; font-family:Roboto, sans-serif; padding:20px;">
+        <img src="https://images.unsplash.com/photo-1428592953211-077101b2021b?q=80&w=1000&auto=format&fit=crop" alt="Guarda-chuva" style="width:100%; max-width:600px; margin:20px auto; border-radius:10px; height:300px;">
             <h1 style="color:blue;">☂️ Importante: Chuva HOJE!</h1>
             <p style="font-size:18px;">Olá,</p>
             <p style="font-size:16px;">Há previsão de chuva para hoje. Não se esqueça de levar um guarda-chuva!</p>
-            <img src="https://unsplash.com/photos/a-black-and-white-photo-of-raindrops-in-a-puddle-pWzH7qOBpb0" alt="Guarda-chuva" style="width:100%; max-width:600px; margin:20px auto; border-radius:10px; height:300px;">
             <p style="font-size:14px; color:gray;">Atenciosamente,<br><strong>Umbrella Remember</strong></p>
         </div>
         """
-        ezgmail.send(recipients, 'Leve um guarda-chuva!', html_body, mimeSubtype='html')
+        for recipient in recipients:
+            ezgmail.send(recipient, 'Leve um guarda-chuva!', html_body, mimeSubtype='html')
         requests.post(
             NTFY_CHANNEL,
             data='Leve um guarda-chuva!',
