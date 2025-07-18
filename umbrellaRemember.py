@@ -95,7 +95,7 @@ def checkRainToday():
         send_email('Dia de sol!', html_body, recipients)
         requests.post(
             NTFY_CHANNEL,
-            data='Sem chuva para hoje!'
+            data='Dia de sol!'
         )
     
 if __name__ == '__main__':
