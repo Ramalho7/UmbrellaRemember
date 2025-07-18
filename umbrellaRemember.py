@@ -3,9 +3,10 @@ import json
 import os, sys
 from datetime import datetime
 from dotenv import load_dotenv
-import ezgmail
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
-ezgmail.init()
 load_dotenv()
 
 CITY = os.getenv('CITY')
@@ -13,6 +14,24 @@ STATE_CODE = os.getenv('STATE_CODE')
 COUNTY_CODE = os.getenv('COUNTY_CODE')
 API_KEY = os.getenv('OPENWEATHER_API_KEY')
 NTFY_CHANNEL = os.getenv('NTFY_CHANNEL')
+
+def send_email(subject, html_body, recipients):
+    smtp_server = os.getenv('SMTP_SERVER')
+    smtp_port = int(os.getenv('SMTP_PORT', 587))  
+    smtp_user = os.getenv('SMTP_USER')
+    smtp_password = os.getenv('SMTP_PASSWORD')
+
+    for recipient in recipients:
+        msg = MIMEMultipart()
+        msg["From"] = smtp_user
+        msg["To"] = recipient
+        msg["Subject"] = subject
+        msg.attach(MIMEText(html_body, "html"))
+
+        with smtplib.SMTP(smtp_server, smtp_port) as server:
+            server.starttls()
+            server.login(smtp_user, smtp_password)
+            server.sendmail(smtp_user, recipient, msg.as_string())
 
 def checkRainToday():
     geo_url = f'https://api.openweathermap.org/geo/1.0/direct?q={CITY},{STATE_CODE},{COUNTY_CODE}&appid={API_KEY}'
@@ -41,7 +60,7 @@ def checkRainToday():
             weather = forecast['weather'][0]['main'].lower()
             if 'rain' in weather or 'chuva' in weather:
                 rain_today = True
-                
+                    
     recipients = os.getenv('RECIPIENTS').split(',')
     recipients = [email.strip() for email in recipients]
     
@@ -55,8 +74,9 @@ def checkRainToday():
             <p style="font-size:14px; color:gray;">Atenciosamente,<br><strong>Umbrella Remember</strong></p>
         </div>
         """
-        for recipient in recipients:
-            ezgmail.send(recipient, 'Leve um guarda-chuva!', html_body, mimeSubtype='html')
+        
+        send_email('Leve um guarda-chuva!', html_body, recipients)
+        
         requests.post(
             NTFY_CHANNEL,
             data='Leve um guarda-chuva!',
@@ -72,8 +92,7 @@ def checkRainToday():
             <p style="font-size:14px; color:gray;">Atenciosamente,<br><strong>Umbrella Remember</strong></p>
         </div>
         """
-        for recipient in recipients:
-            ezgmail.send(recipient, 'Dia de sol!', html_body, mimeSubtype='html')
+        send_email('Dia de sol!', html_body, recipients)
         requests.post(
             NTFY_CHANNEL,
             data='Sem chuva para hoje!'
