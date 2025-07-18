@@ -3,3 +3,6 @@
 !.gitignore
 !.github
 !readme.md
+!app.py
+!templates/
+!templates/**
