@@ -17,20 +17,19 @@ NTFY_CHANNEL = os.getenv('NTFY_CHANNEL')
 
 def send_email(subject, html_body, recipients):
     smtp_server = os.getenv('SMTP_SERVER')
-    smtp_port = int(os.getenv('SMTP_PORT', 587))  
+    smtp_port = int(os.getenv('SMTP_PORT', 587))
     smtp_user = os.getenv('SMTP_USER')
     smtp_password = os.getenv('SMTP_PASSWORD')
 
-    for recipient in recipients:
-        msg = MIMEMultipart()
-        msg["From"] = smtp_user
-        msg["To"] = recipient
-        msg["Subject"] = subject
-        msg.attach(MIMEText(html_body, "html"))
-
-        with smtplib.SMTP(smtp_server, smtp_port) as server:
-            server.starttls()
-            server.login(smtp_user, smtp_password)
+    with smtplib.SMTP(smtp_server, smtp_port) as server:
+        server.starttls()
+        server.login(smtp_user, smtp_password)
+        for recipient in recipients:
+            msg = MIMEMultipart()
+            msg["From"] = smtp_user
+            msg["To"] = recipient
+            msg["Subject"] = subject
+            msg.attach(MIMEText(html_body, "html"))
             server.sendmail(smtp_user, recipient, msg.as_string())
 
 def checkRainToday():
@@ -42,28 +41,28 @@ def checkRainToday():
     geo_data = response.json()
     lat = geo_data[0]['lat']
     lon = geo_data[0]['lon']
-    
+
     today = datetime.now().date()
-    
+
     forecast_url = f'https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid={API_KEY}&lang=pt_br'
     forecast_response = requests.get(forecast_url)
     if forecast_response.status_code != 200:
         print(f'Erro na requisição de previsão: {forecast_response.status_code}')
         return
     forecast_data = forecast_response.json()
-    
+
     rain_today = False
-    
+
     for forecast in forecast_data['list']:
         forecast_time = datetime.fromtimestamp(forecast['dt'])
         if forecast_time.date() == today:
             weather = forecast['weather'][0]['main'].lower()
             if 'rain' in weather or 'chuva' in weather:
                 rain_today = True
-                    
+
     recipients = os.getenv('RECIPIENTS').split(',')
     recipients = [email.strip() for email in recipients]
-    
+
     if rain_today:
         html_body = """
         <div style="text-align:center; font-family:Roboto, sans-serif; padding:20px;">
@@ -74,9 +73,9 @@ def checkRainToday():
             <p style="font-size:14px; color:gray;">Atenciosamente,<br><strong>Umbrella Remember</strong></p>
         </div>
         """
-        
+
         send_email('Leve um guarda-chuva!', html_body, recipients)
-        
+
         requests.post(
             NTFY_CHANNEL,
             data='Leve um guarda-chuva!',
@@ -95,8 +94,8 @@ def checkRainToday():
         send_email('Dia de sol!', html_body, recipients)
         requests.post(
             NTFY_CHANNEL,
-            data='Dia de sol!'
+            data='Sem chuva para hoje!'
         )
-    
+
 if __name__ == '__main__':
     checkRainToday()
