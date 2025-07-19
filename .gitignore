@@ -6,3 +6,5 @@
 !app.py
 !templates/
 !templates/**
+!static/
+!static/**
