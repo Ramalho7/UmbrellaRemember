@@ -4,8 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Teste</title>
+    <title>{% block title %}{% endblock %}</title>
     <link href="/static/css/layout.css" rel="stylesheet">
+    <link href="/static/css/index.css" rel="stylesheet">
 </head>
 
 <body>
@@ -15,8 +16,10 @@
             <a href="login">Login</a>
         </div>
     </header>
-    {% block body %}
-    {% endblock %}
+    <main>
+        {% block body %}
+        {% endblock %}
+    </main>
 </body>
 
 </html>

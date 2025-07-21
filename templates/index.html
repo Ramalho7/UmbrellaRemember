@@ -1,38 +1,41 @@
 {% extends 'layout.html' %}
 
+{% block title %}Página Inicial{% endblock %}
+
 {% block body %}
 
-<form action="register">
-    <label for="email">E-mail</label>
-    <input id="email" autocomplete="off" name="email" placeholder="Digite seu e-mail" type="email" required>
-    <label for="city">Cidade</label>
-    <select id="city" name="city" required>
-        <option value="">Selecione sua cidade</option>
-        <option value="Sao Paulo">São Paulo</option>
-        <option value="Rio de Janeiro">Rio de Janeiro</option>
-        <option value="Belo Horizonte">Belo Horizonte</option>
-        <option value="Brasilia">Brasília</option>
-        <option value="Salvador">Salvador</option>
-        <option value="Curitiba">Curitiba</option>
-        <option value="Porto Alegre">Porto Alegre</option>
-        <option value="Recife">Recife</option>
-        <option value="Fortaleza">Fortaleza</option>
-    </select>
-    <labe for="state">Estado</labe>
-    <label for="state">Estado</label>
-    <select id="state" name="state" required>
-        <option value="">Selecione o estado</option>
-        <option value="SP">São Paulo</option>
-        <option value="RJ">Rio de Janeiro</option>
-        <option value="MG">Minas Gerais</option>
-        <option value="DF">Distrito Federal</option>
-        <option value="BA">Bahia</option>
-        <option value="PR">Paraná</option>
-        <option value="RS">Rio Grande do Sul</option>
-        <option value="PE">Pernambuco</option>
-        <option value="CE">Ceará</option>
-    </select>
-    <button type="submit">Submit</button>
-</form>
+<div class="main_form">
+    <form action="register">
+        <label for="email">E-mail</label>
+        <input id="email" autocomplete="off" name="email" placeholder="Digite seu e-mail" type="email" required>
+        <label for="city">Cidade</label>
+        <input list="cities" id="city" name="city" placeholder="Digite ou selecione sua cidade" required>
+        <datalist id="cities">
+            <option value="São Paulo">
+            <option value="Rio de Janeiro">
+            <option value="Belo Horizonte">
+            <option value="Brasília">
+            <option value="Salvador">
+            <option value="Curitiba">
+            <option value="Porto Alegre">
+            <option value="Recife">
+            <option value="Fortaleza">
+        </datalist>
+        <label for="state">Estado</label>
+        <input list="states" id="state" name="state" placeholder="Digite ou selecione seu estado" required>
+        <datalist id="states">
+            <option value="SP">São Paulo</option>
+            <option value="RJ">Rio de Janeiro</option>
+            <option value="MG">Minas Gerais</option>
+            <option value="DF">Distrito Federal</option>
+            <option value="BA">Bahia</option>
+            <option value="PR">Paraná</option>
+            <option value="RS">Rio Grande do Sul</option>
+            <option value="PE">Pernambuco</option>
+            <option value="CE">Ceará</option>
+        </datalist>
+        <button type="submit">Submit</button>
+    </form>
+</div>
 
 {% endblock %}

@@ -1,7 +1,10 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 app=Flask(__name__)
 
-@app.route('/')
+@app.route('/', methods=["GET","POST"])
 def index_page():
-    return render_template('index.html')
+    if request.method == "POST":
+        return render_template('register.html')
+    else:
+        return render_template('index.html')
 
