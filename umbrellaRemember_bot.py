@@ -2,8 +2,9 @@ import requests
 import os
 from datetime import datetime
 from dotenv import load_dotenv
-
 import telegram
+from telegram import Update
+from telegram.ext import Application, CommandHandler, MessageHandler, filters, ConversationHandler, ContextTypes
 import asyncio
 
 load_dotenv()
@@ -17,47 +18,80 @@ TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
 
 bot = telegram.Bot(token=TELEGRAM_TOKEN)
 
+CITY, STATE, COUNTRY = range(3)
+
 async def send_telegram_message(text):
     if TELEGRAM_TOKEN and TELEGRAM_CHAT_ID:
         await bot.send_message(chat_id=TELEGRAM_CHAT_ID, text=text)
+        
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text("Olá! Digite o nome da sua cidade:")
+    return CITY
 
-def checkRainToday():
-    geo_url = f'https://api.openweathermap.org/geo/1.0/direct?q={CITY},{STATE_CODE},{COUNTY_CODE}&appid={API_KEY}'
+async def get_city(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    context.user_data['city'] = update.message.text.strip()
+    await update.message.reply_text("Agora digite o estado:")
+    return STATE
+
+async def get_state(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    context.user_data['state'] = update.message.text.strip()
+    await update.message.reply_text("Agora digite o país (código, ex: BR):")
+    return COUNTRY
+
+async def get_country(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    context.user_data['country'] = update.message.text.strip() 
+    await checkRainRealTime(update, context)
+    return ConversationHandler.END
+
+async def checkRainRealTime(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    city = context.user_data['city']
+    state = context.user_data['state']
+    country = context.user_data['country']
+    
+    geo_url = f'https://api.openweathermap.org/geo/1.0/direct?q={city},{state},{country}&appid={API_KEY}'
     response = requests.get(geo_url)
-    if response.status_code != 200:
-        print(f'Erro na requisição: {response.status_code}')
-        return
+    if response.status_code != 200 or not response.json():
+        await update.message.reply_text("Localização não encontrada ou erro na requisição.")
+        return ConversationHandler.END
+
     geo_data = response.json()
     lat = geo_data[0]['lat']
     lon = geo_data[0]['lon']
 
-    today = datetime.now().date()
-
     forecast_url = f'https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid={API_KEY}&lang=pt_br'
     forecast_response = requests.get(forecast_url)
     if forecast_response.status_code != 200:
-        print(f'Erro na requisição de previsão: {forecast_response.status_code}')
-        return
+        await update.message.reply_text("Erro ao buscar previsão do tempo.")
+        return ConversationHandler.END
+
     forecast_data = forecast_response.json()
-
-    rain_today = False
-
-    for forecast in forecast_data['list']:
-        forecast_time = datetime.fromtimestamp(forecast['dt'])
-        if forecast_time.date() == today:
-            weather = forecast['weather'][0]['main'].lower()
-            if 'rain' in weather or 'chuva' in weather:
-                rain_today = True
-
-    recipients = os.getenv('RECIPIENTS').split(',')
-    recipients = [email.strip() for email in recipients]
+    today = forecast_data['list'][0]['dt_txt'][:10]
+    rain_today = any(
+        'rain' in item['weather'][0]['main'].lower() or 'chuva' in item['weather'][0]['main'].lower()
+        for item in forecast_data['list'] if item['dt_txt'].startswith(today)
+    )
 
     if rain_today:
-    
-        asyncio.run(send_telegram_message("Leve um guarda-chuva!"))
-        
+        await update.message.reply_text("Vai chover hoje! Leve um guarda-chuva! ☂️")
     else:
-        asyncio.run(send_telegram_message("Dia de sol! ☀️"))
+        await update.message.reply_text("Dia de sol! ☀️")
+        
+async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text("Consulta cancelada.")
+    return ConversationHandler.END
 
 if __name__ == '__main__':
-    checkRainToday()
+    app = Application.builder().token(TELEGRAM_TOKEN).build()
+
+    conv_handler = ConversationHandler(
+        entry_points=[CommandHandler('start', start)],
+        states={
+            CITY: [MessageHandler(filters.TEXT & ~filters.COMMAND, get_city)],
+            STATE: [MessageHandler(filters.TEXT & ~filters.COMMAND, get_state)],
+            COUNTRY: [MessageHandler(filters.TEXT & ~filters.COMMAND, get_country)],
+        },
+        fallbacks=[CommandHandler('cancel', cancel)],
+    )
+
+    app.add_handler(conv_handler)
+    app.run_polling()
