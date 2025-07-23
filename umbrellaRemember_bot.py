@@ -3,29 +3,31 @@ import os
 from datetime import datetime
 from dotenv import load_dotenv
 import telegram
-from telegram import Update
+from telegram import Update, ReplyKeyboardMarkup
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ConversationHandler, ContextTypes
 import asyncio
 
 load_dotenv()
 
-CITY = os.getenv('CITY')
-STATE_CODE = os.getenv('STATE_CODE')
-COUNTY_CODE = os.getenv('COUNTY_CODE')
 API_KEY = os.getenv('OPENWEATHER_API_KEY')
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
 
-bot = telegram.Bot(token=TELEGRAM_TOKEN)
-
 CITY, STATE, COUNTRY = range(3)
-
-async def send_telegram_message(text):
-    if TELEGRAM_TOKEN and TELEGRAM_CHAT_ID:
-        await bot.send_message(chat_id=TELEGRAM_CHAT_ID, text=text)
         
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Olá! Digite o nome da sua cidade:")
+    await update.message.reply_text(
+        "🌂 Bem-vindo ao Umbrella Remember!"
+    )
+    await update.message.reply_text(
+        """🌂 Comandos válidos:\n
+        /checkRain
+        """,
+    )
+    return CITY
+
+async def checkRain(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text("Para começarmos, digite a sua cidade:")
     return CITY
 
 async def get_city(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -84,13 +86,20 @@ if __name__ == '__main__':
     app = Application.builder().token(TELEGRAM_TOKEN).build()
 
     conv_handler = ConversationHandler(
-        entry_points=[CommandHandler('start', start)],
+        entry_points=[
+        CommandHandler('start', start),
+        CommandHandler('checkRain', checkRain)
+        ],
         states={
             CITY: [MessageHandler(filters.TEXT & ~filters.COMMAND, get_city)],
             STATE: [MessageHandler(filters.TEXT & ~filters.COMMAND, get_state)],
             COUNTRY: [MessageHandler(filters.TEXT & ~filters.COMMAND, get_country)],
         },
-        fallbacks=[CommandHandler('cancel', cancel)],
+        fallbacks=[
+            CommandHandler('cancel', cancel),
+            CommandHandler('checkRain', checkRain) # Preciso para que o comando envie a mensagem inicial e também sirva como entry point par ao bot
+        ],
+        
     )
 
     app.add_handler(conv_handler)
