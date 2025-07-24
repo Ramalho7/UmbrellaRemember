@@ -22,7 +22,8 @@ def registerUser():
     city_id = request.form['city_id']
     password = request.form['password']
     session = Session()
-    new_user = User(name=name, email=email, city_id=city_id, password=password)
+    new_user = User(name=name, email=email, city_id=city_id)
+    new_user.set_password(password)
     session.add(new_user)
     session.commit()
     session.close()
