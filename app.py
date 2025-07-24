@@ -1,9 +1,10 @@
 from flask import Flask, render_template, request, redirect, url_for
-app=Flask(__name__)
 from models.model import User, engine, City, State
 from sqlalchemy.orm import sessionmaker, joinedload
 from dotenv import load_dotenv
 import os
+
+app=Flask(__name__)
 
 Session = sessionmaker(bind=engine)
 
@@ -19,8 +20,9 @@ def registerUser():
     name = request.form['name']
     email = request.form['email']
     city_id = request.form['city_id']
+    password = request.form['password']
     session = Session()
-    new_user = User(name=name, email=email, city_id=city_id)
+    new_user = User(name=name, email=email, city_id=city_id, password=password)
     session.add(new_user)
     session.commit()
     session.close()

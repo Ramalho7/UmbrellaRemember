@@ -3,6 +3,9 @@ from sqlalchemy.orm import declarative_base, relationship, sessionmaker
 from dotenv import load_dotenv
 import os
 import requests
+from argon2 import PasswordHasher
+
+ph = PasswordHasher()
 
 load_dotenv()
 
@@ -16,7 +19,6 @@ engine = create_engine(f'mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}/{DB_N
 Base = declarative_base()
 
 Session = sessionmaker(bind=engine)
-session = Session()
 class Country(Base):
     __tablename__ = 'country'
     id = Column(Integer, primary_key=True)
@@ -41,13 +43,23 @@ class User(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(100), nullable=False)
     email = Column(String(150), nullable=False, unique=True)
+    password = Column(String(255), nullable=False)
     city_id = Column(Integer, ForeignKey('city.id'))
     city = relationship("City", back_populates="users")
 
+    def set_password(self, password_plain):
+        self.password = ph.hash(password_plain)
+
+    def check_password(self, password_plain):
+        try:
+            return ph.verify(self.password, password_plain)
+        except Exception:
+            return False
 def create_tables():
     Base.metadata.create_all(engine)
 
 def fetch_brazilian_cities_data():
+    session = Session()
     try:
         brazil = Country(id=1, country_name="Brazil")
         session.add(brazil)
@@ -90,6 +102,6 @@ def fetch_brazilian_cities_data():
     finally:
         session.close()
 
-if __name__ == "__main__":
-    # create_tables()
-    fetch_brazilian_cities_data()
+#if __name__ == "__main__":
+    #create_tables()
+    #fetch_brazilian_cities_data()
