@@ -6,15 +6,6 @@ from sqlalchemy.orm import DeclarativeBase
 from dotenv import load_dotenv
 import os
 
-load_dotenv()
-
-DB_USER = os.getenv('DB_USER')
-DB_PASSWORD = os.getenv('DB_PASSWORD')
-DB_HOST = os.getenv('DB_HOST')
-DB_NAME = os.getenv('DB_NAME')
-
-engine = create_engine(f'mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}')
-
 @app.route('/', methods=["GET","POST"])
 def index_page():
     if request.method == "POST":
