@@ -1,7 +1,8 @@
 from sqlalchemy import create_engine, Column, Integer, String, text, MetaData, ForeignKey
-from sqlalchemy.orm import declarative_base, relationship
+from sqlalchemy.orm import declarative_base, relationship, sessionmaker
 from dotenv import load_dotenv
 import os
+import requests
 
 load_dotenv()
 
@@ -13,22 +14,28 @@ DB_NAME = os.getenv('DB_NAME')
 engine = create_engine(f'mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}')
 
 Base = declarative_base()
+
+Session = sessionmaker(bind=engine)
+session = Session()
 class Country(Base):
     __tablename__ = 'country'
     id = Column(Integer, primary_key=True)
     country_name = Column(String(150), nullable=False)
+    states = relationship("State", back_populates="country")
 class State(Base):
     __tablename__ = 'state'
     id = Column(Integer, primary_key=True)
     state_name = Column(String(150), nullable=False)
     country_id = Column(Integer, ForeignKey('country.id'))
-    country = relationship("country", back_populates="State")
+    country = relationship("Country", back_populates="states")
+    cities = relationship("City", back_populates="state")
 class City(Base):
     __tablename__ = 'city'
     id = Column(Integer, primary_key=True)
     city_name = Column(String(150), nullable=False) 
     state_id = Column(Integer, ForeignKey('state.id'))
-    state = relationship("State", back_populates="City")
+    state = relationship("State", back_populates="cities")
+    users = relationship("User", back_populates="city")
 class User(Base):
     __tablename__ = 'user'
     id = Column(Integer, primary_key=True)
@@ -40,5 +47,49 @@ class User(Base):
 def create_tables():
     Base.metadata.create_all(engine)
 
+def fetch_brazilian_cities_data():
+    try:
+        brazil = Country(id=1, country_name="Brazil")
+        session.add(brazil)
+        session.commit()
+        
+        states_url = f"https://servicodados.ibge.gov.br/api/v1/localidades/estados"
+        states_response = requests.get(states_url)
+        states_response.raise_for_status()
+        states = states_response.json()
+        
+        for state in states:
+            state_entry = State(
+                id=state['id'],
+                state_name=state['nome'],
+                country_id=1
+            )
+            session.add(state_entry)
+            session.commit()
+            
+            city_url = f"https://servicodados.ibge.gov.br/api/v1/localidades/estados/{state['id']}/municipios"
+            city_response = requests.get(city_url)
+            city_response.raise_for_status()
+            cities = city_response.json()
+            
+            for city in cities:
+                city_entry = City(
+                    id=city['id'],
+                    city_name=city['nome'],
+                    state_id=state['id']
+                )
+                session.add(city_entry)
+                session.commit()
+                
+    except requests.exceptions.RequestException as e:
+        print(f"Error fetching data from IBGE API: {e}")
+        session.rollback()
+    except Exception as e:
+        print(f"Error populating database: {e}")
+        session.rollback()
+    finally:
+        session.close()
+
 if __name__ == "__main__":
-    create_tables()
+    # create_tables()
+    fetch_brazilian_cities_data()

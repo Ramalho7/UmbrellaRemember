@@ -5,34 +5,17 @@
 {% block body %}
 
 <div class="main_form">
-    <form action="register">
+    <form action="/register" method="POST">
+        <label for="name">Nome</label>
+        <input id="name" name="name" placeholder="Digite seu nome" required>
         <label for="email">E-mail</label>
         <input id="email" autocomplete="off" name="email" placeholder="Digite seu e-mail" type="email" required>
         <label for="city">Cidade</label>
-        <input list="cities" id="city" name="city" placeholder="Digite ou selecione sua cidade" required>
+        <input list="cities" id="city" name="city_id" placeholder="Digite ou selecione sua cidade" required>
         <datalist id="cities">
-            <option value="São Paulo">
-            <option value="Rio de Janeiro">
-            <option value="Belo Horizonte">
-            <option value="Brasília">
-            <option value="Salvador">
-            <option value="Curitiba">
-            <option value="Porto Alegre">
-            <option value="Recife">
-            <option value="Fortaleza">
-        </datalist>
-        <label for="state">Estado</label>
-        <input list="states" id="state" name="state" placeholder="Digite ou selecione seu estado" required>
-        <datalist id="states">
-            <option value="SP">São Paulo</option>
-            <option value="RJ">Rio de Janeiro</option>
-            <option value="MG">Minas Gerais</option>
-            <option value="DF">Distrito Federal</option>
-            <option value="BA">Bahia</option>
-            <option value="PR">Paraná</option>
-            <option value="RS">Rio Grande do Sul</option>
-            <option value="PE">Pernambuco</option>
-            <option value="CE">Ceará</option>
+            {% for city in cities %}
+            <option value="{{ city.id }}">{{ city.city_name }} - {{ city.state.state_name }}</option>
+            {% endfor %}
         </datalist>
         <button type="submit">Submit</button>
     </form>
