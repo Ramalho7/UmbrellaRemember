@@ -68,6 +68,8 @@ class User(Base):
 def create_tables():
     Base.metadata.create_all(engine)
 
+
+
 def fetch_brazilian_cities_data():
     session = Session()
     try:
