@@ -7,7 +7,7 @@ from datetime import datetime
 import os
 from utils.email_exists import email_exists
 from utils.login_verify import login_verify
-from utils.get_user_by_id import get_user_by_id
+from models.get_user_by_id import get_user_by_id
 
 
 load_dotenv()
@@ -52,13 +52,15 @@ def registerUser():
 @app.route('/profile')
 
 def profile():
+    print('user_id in session:', 'user_id' in session)
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
     session_db = DBSession()
     user = get_user_by_id(session_db, session['user_id'])
     session_db.close()
     return render_template('profile.html', user=user)
 
 @app.route('/login', methods=["GET", "POST"])
-
 def login():
     if request.method == "POST":
         email = request.form['email'].strip()
@@ -75,6 +77,10 @@ def login():
             return redirect(url_for('login'))
     return render_template('login.html')
 
+@app.route('/logout', methods=["GET", "POST"])
+def logout():
+    session.clear()
+    return redirect('/')
 
 if __name__ == "__main__":
     app.run(debug=True)
