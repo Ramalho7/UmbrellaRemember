@@ -4,6 +4,8 @@ from dotenv import load_dotenv
 import os
 import requests
 from argon2 import PasswordHasher
+from datetime import datetime, timedelta, timezone
+
 
 ph = PasswordHasher()
 
@@ -19,6 +21,9 @@ engine = create_engine(f'mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}/{DB_N
 Base = declarative_base()
 
 Session = sessionmaker(bind=engine)
+
+BRAZIL_TZ = timezone(timedelta(hours=-3))
+
 class Country(Base):
     __tablename__ = 'country'
     id = Column(Integer, primary_key=True)
@@ -46,6 +51,11 @@ class User(Base):
     password = Column(String(255), nullable=False)
     city_id = Column(Integer, ForeignKey('city.id'))
     city = relationship("City", back_populates="users")
+    created_at = Column(
+        String(30),
+        nullable=False,
+        default=lambda: datetime.now(BRAZIL_TZ).strftime('%Y-%m-%d %H:%M:%S')
+    )
 
     def set_password(self, password_plain):
         self.password = ph.hash(password_plain)
@@ -102,6 +112,10 @@ def fetch_brazilian_cities_data():
     finally:
         session.close()
 
-#if __name__ == "__main__":
-    #create_tables()
-    #fetch_brazilian_cities_data()
+def drop_tables():
+    Base.metadata.drop_all(engine)
+
+if __name__ == "__main__":
+    create_tables()
+    fetch_brazilian_cities_data()
+    #drop_tables()
