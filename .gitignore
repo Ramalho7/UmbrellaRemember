@@ -3,3 +3,12 @@
 !.gitignore
 !.github
 !readme.md
+!app.py
+!templates/
+!templates/**
+!static/
+!static/**
+!models/
+!models/**
+!utils/
+!utils/**

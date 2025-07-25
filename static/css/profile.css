@@ -1,0 +1,97 @@
+.container {
+    max-width: 420px;
+    margin: 40px auto;
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+    padding: 32px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.headerProfile {
+    width: 100%;
+    display: block;
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+.avatar {
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: center;
+}
+
+.avatar img {
+    margin: 0 auto;
+    display: block;
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: #eaeaea;
+    object-fit: cover;
+    border: 2px solid #d1d1d1;
+}
+
+.userName {
+    margin-bottom: 12px;
+}
+
+.userName h2 {
+    margin: 0;
+    font-size: 1.6rem;
+    color: #333;
+}
+
+.addicionalProfileInfos {
+    width: 100%;
+    margin-bottom: 28px;
+    text-align: center;
+}
+
+.email, .location {
+    font-size: 1.08rem;
+    color: #555;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.buttons {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
+}
+
+.buttonEdit button,
+.buttonDeleteAccount button {
+    padding: 8px 18px;
+    border-radius: 6px;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.18s;
+    width: 180px;
+    box-sizing: border-box;
+    display: inline-block;
+}
+
+.buttonEdit button {
+    background: #1976d2;
+    color: #fff;
+}
+
+.buttonEdit button:hover {
+    background: #115293;
+}
+
+.buttonDeleteAccount button {
+    background: #e53935;
+    color: #fff;
+}
+
+.buttonDeleteAccount button:hover {
+    background: #b71c1c;
+}

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <link href="/static/css/layout.css" rel="stylesheet">
+    <link href="/static/css/index.css" rel="stylesheet">
+    <link href="/static/css/profile.css" rel="stylesheet">
+</head>
+
+<body>
+    <header>
+        <div class="header-content">
+            <a href="/">
+                <h1>Umbrella Remember</h1>
+            </a>
+            <a href="/profile">Perfil</a>
+            <a href="/login">Login</a>
+            <a href="/logout">Logout</a>
+        </div>
+    </header>
+    <div class="flash_messages">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="flash-messages">
+            {% for category, message in messages %}
+            <div class="flash {{ category }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+    </div>
+    <main>
+        {% block body %}
+        {% endblock %}
+    </main>
+
+    <footer>
+        <div>
+            Umbrella Remember &copy; 2025
+            <a href="https://github.com/ramalho7/umbrellaremember" target="_blank">
+                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" alt="GitHub">
+            </a>
+        </div>
+    </footer>
+</body>
+
+</html>
