@@ -71,6 +71,21 @@ def updateUser():
     flash("Dados atualizados com sucesso!", "success")
     return redirect(url_for('profile'))
 
+@app.route('/deleteAccount', methods=["POST"])
+def deleteAccount():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+    db_session = DBSession()
+    user = db_session.query(User).get(session['user_id'])
+    if user:
+        db_session.delete(user)
+        db_session.commit()
+        session.clear()
+        flash("Conta excluída com sucesso!", "success")
+    db_session.close()
+    return redirect(url_for('index_page'))
+        
+
 @app.route('/profile')
 def profile():
     if 'user_id' not in session:
