@@ -1,0 +1,28 @@
+{% extends 'layout.html' %}
+
+{% block title %}Atualização de cadastro{% endblock %}
+
+{% block body %}
+
+<div class="main_form">
+    <div class="userId">
+        <input type="hidden" value="{{user.id}}">
+    </div>
+    <form action="/updateUser" method="POST">
+        <label for="name">Nome</label>
+        <input id="name" name="name" placeholder="{{user.name}}" required>
+        <label for="email">E-mail</label>
+        <input id="email" autocomplete="off" name="email" placeholder="{{user.email}}" type="email" required>
+        <label for="city">Cidade</label>
+        <input list="cities" id="city" name="city_id" placeholder="Digite ou selecione sua cidade" required>
+        <datalist id="cities">
+            <option value="{{ user.city.id }}">{{ user.city.city_name }} - {{ user.city.state.state_name }} (atual)</option>
+            {% for city in cities %}
+            <option value="{{ city.id }}">{{ city.city_name }} - {{ city.state.state_name }}</option>
+            {% endfor %}
+        </datalist>
+        <button type="submit">Submit</button>
+    </form>
+</div>
+
+{% endblock %}

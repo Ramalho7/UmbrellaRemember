@@ -10,20 +10,22 @@
             <img src="">
         </div>
         <div class="userName">
-        <h2>teste</h2>
-    </div>
-    <div class="addicionalProfileInfos">
-    <div class="email">Email do usuário</div>
-    <div class="location">Cidade do usuário</div>
-</div>
-    <div class="buttons">
-        <div class="buttonEdit">
-            <button id="editProfile">Editar perfil</button>
+            <h2>{{user.name}}</h2>
         </div>
-        <div class="buttonDeleteAccount">
-            <button id="deleteAccount">Deletar conta</button>
+        <div class="addicionalProfileInfos">
+            <div class="email">{{user.email}}</div>
+            <div class="location">{{user.city.city_name}} - {{user.city.state.state_name}} - {{user.city.state.country.country_name}}</div>
+        </div>
+        <div class="buttons">
+            <div class="buttonEdit">
+                <a href="{{ url_for('editUserPage') }}">
+                    <button id="editProfile">Editar perfil</button>
+                </a>
+            </div>
+            <div class="buttonDeleteAccount">
+                <button id="deleteAccount">Deletar conta</button>
+            </div>
         </div>
     </div>
-</div>
 
-{% endblock %}
+    {% endblock %}
