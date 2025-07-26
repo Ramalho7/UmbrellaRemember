@@ -116,7 +116,7 @@ def fetch_brazilian_cities_data():
 def drop_tables():
     Base.metadata.drop_all(engine)
 
-#if __name__ == "__main__":
-    #create_tables()
-    #fetch_brazilian_cities_data()
-    #drop_tables()
+if __name__ == "__main__":
+    create_tables()
+    fetch_brazilian_cities_data()
+    drop_tables()
