@@ -5,7 +5,7 @@ import os
 import requests
 from argon2 import PasswordHasher
 from datetime import datetime, timedelta, timezone
-
+from abc import ABC, abstractmethod
 
 ph = PasswordHasher()
 
@@ -65,10 +65,9 @@ class User(Base):
             return ph.verify(self.password, password_plain)
         except Exception:
             return False
+
 def create_tables():
     Base.metadata.create_all(engine)
-
-
 
 def fetch_brazilian_cities_data():
     session = Session()
@@ -117,7 +116,7 @@ def fetch_brazilian_cities_data():
 def drop_tables():
     Base.metadata.drop_all(engine)
 
-if __name__ == "__main__":
-    create_tables()
-    fetch_brazilian_cities_data()
+#if __name__ == "__main__":
+    #create_tables()
+    #fetch_brazilian_cities_data()
     #drop_tables()

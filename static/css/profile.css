@@ -65,6 +65,29 @@
     align-items: center;
 }
 
+.buttonDeleteAccount {
+    width: auto;
+    background: none;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.buttonDeleteAccount form {
+    width: auto;
+    background: none;
+    box-shadow: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .buttonEdit button,
 .buttonDeleteAccount button {
     padding: 8px 18px;

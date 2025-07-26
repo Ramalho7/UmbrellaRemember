@@ -1,16 +1,23 @@
 body {
     min-height: 100vh;
-    align-items: center;
-    justify-content: center;
     background: #f5f6fa;
     font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
 }
 
-.main_form {
+.register-container {
     min-height: calc(100vh - 70px); 
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.main_form {
+    border-radius: 18px;
+    max-width: 370px;
+    width: 100%;
+    padding: 36px 32px 28px 32px;
 }
 
 form {
