@@ -8,18 +8,22 @@
     <link href="/static/css/layout.css" rel="stylesheet">
     <link href="/static/css/index.css" rel="stylesheet">
     <link href="/static/css/profile.css" rel="stylesheet">
-    <link href="/static/css/login.css" rel="stylesheet">
 </head>
 
 <body>
     <header>
         <div class="header-content">
-            <a href="/">
+            <a href="/" class="title-link">
                 <h1>Umbrella Remember</h1>
             </a>
-            <a href="/profile">Perfil</a>
-            <a href="/login">Login</a>
-            <a href="/logout">Logout</a>
+            <div class="header-links">
+                {% if 'user_id' not in session %}
+                <a href="/login">Login</a>
+                {% else %}
+                <a href="/profile">Perfil</a>
+                <a href="/logout">Logout</a>
+                {% endif %}
+            </div>
         </div>
     </header>
     <div class="flash_messages">
