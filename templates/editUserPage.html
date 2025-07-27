@@ -6,25 +6,32 @@
 <div class="form-container">
     <div class="main_form">
         <div class="userId">
-            <input type="hidden" value="{{user.id}}">
+            <input type="hidden" name="user_id" value="{{ user.id }}">
         </div>
         <form action="/updateUser" method="POST">
             <label for="name">Nome</label>
-            <input id="name" name="name" placeholder="{{user.name}}" required>
+            <input id="name" name="name" value="{{ user.name }}" placeholder="Digite seu nome" required>
+            
             <label for="email">E-mail</label>
-            <input id="email" autocomplete="off" name="email" placeholder="{{user.email}}" type="email" required>
+            <input id="email" autocomplete="off" name="email" value="{{ user.email }}" placeholder="Digite seu e-mail" type="email" required>
+            
             <label for="city">Cidade</label>
-            <input list="cities" id="city" name="city_id" placeholder="Digite ou selecione sua cidade" required>
-            <datalist id="cities">
-                <option value="{{ user.city.id }}">{{ user.city.city_name }} - {{ user.city.state.state_name }} (atual)
-                </option>
+
+            <input id="city_input" placeholder="Digite ou selecione sua cidade" value="{{ user.city.city_name }} - {{ user.city.state.state_name }}" oninput="syncCityInput()" required>
+            
+            <select id="city_select" name="city_id" onchange="syncCitySelect()" required>
+                <option value="" disabled>Selecione sua cidade</option>
+                <option value="{{ user.city.id }}" selected>{{ user.city.city_name }}, {{ user.city.state.state_name }} (atual)</option>
                 {% for city in cities %}
-                <option value="{{ city.id }}">{{ city.city_name }} - {{ city.state.state_name }}</option>
+                <option value="{{ city.id }}">{{ city.city_name }}, {{ city.state.state_name }}</option>
                 {% endfor %}
-            </datalist>
-            <button type="submit">Submit</button>
+            </select>
+            
+            <button type="submit">Atualizar</button>
         </form>
     </div>
 </div>
+
+<script src="/static/syncCityInput.js"></script>
 
 {% endblock %}
