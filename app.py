@@ -7,8 +7,8 @@ from datetime import datetime
 import os
 from utils.email_exists import email_exists
 from utils.login_verify import login_verify
-from models.get_user_by_id import get_user_by_id
 from models.update_user import update_user
+from models.set_password import set_password
 
 
 load_dotenv()
@@ -42,7 +42,7 @@ def registerUser():
         flash("E-mail já cadastrado!", "error")
         return redirect(url_for('index_page'))
     new_user = User(name=name, email=email, city_id=city_id)
-    new_user.set_password(password)
+    set_password(new_user, password)
     db_session.add(new_user)
     db_session.commit()
     user_id = new_user.id
