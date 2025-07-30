@@ -12,3 +12,6 @@
 !models/**
 !utils/
 !utils/**
+!blueprints/
+!blueprints/**
+
