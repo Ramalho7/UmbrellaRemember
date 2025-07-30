@@ -18,10 +18,10 @@
             </a>
             <div class="header-links">
                 {% if 'user_id' not in session %}
-                <a href="/login">Login</a>
+                <a href="{{ url_for('auth.login') }}">Login</a>
                 {% else %}
-                <a href="/profile">Perfil</a>
-                <a href="/logout">Logout</a>
+                <a href="{{ url_for('user.profile') }}">Perfil</a>
+                <a href="{{ url_for('auth.logout') }}">Logout</a>
                 {% endif %}
             </div>
         </div>

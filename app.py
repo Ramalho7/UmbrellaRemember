@@ -10,6 +10,7 @@ from utils.login_verify import login_verify
 from models.update_user import update_user
 from models.set_password import set_password
 from blueprints.user import user_bp
+from blueprints.auth import auth_bp
 
 
 load_dotenv()
@@ -23,6 +24,7 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 app.register_blueprint(user_bp, url_prefix='/user')
+app.register_blueprint(auth_bp, url_prefix='/auth')
 
 @app.route('/', methods=["GET","POST"])
 def index_page():
@@ -86,28 +88,6 @@ def deleteAccount():
         flash("Conta excluída com sucesso!", "success")
     db_session.close()
     return redirect(url_for('index_page'))
-        
-@app.route('/login', methods=["GET", "POST"])
-def login():
-    if request.method == "POST":
-        email = request.form['email'].strip()
-        password = request.form['password']
-        db_session = DBSession()
-        user = login_verify(db_session, email, password, User)
-        db_session.close()
-        if user:
-            session['user_id'] = user.id
-            flash("Login realizado com sucesso!", "success")
-            return redirect(url_for('user.profile'))
-        else:
-            flash("Email ou senha inválidos", "error")
-            return redirect(url_for('login'))
-    return render_template('login.html')
-
-@app.route('/logout', methods=["GET", "POST"])
-def logout():
-    session.clear()
-    return redirect('/')
 
 if __name__ == "__main__":
     app.run(debug=True)
