@@ -3,20 +3,20 @@ from models.model import User, City, State
 from sqlalchemy.orm import sessionmaker, joinedload
 from models.model import engine
 import os
-from models.set_password import set_password
+from utils.set_password import set_password
 from utils.email_exists import email_exists
 from models.update_user import update_user
+from flask_login import current_user, login_required, login_user
 
 DBSession = sessionmaker(bind=engine)
 
 user_bp = Blueprint('user', __name__, template_folder=os.path.abspath('templates/user'))
 
 @user_bp.route('/profile')
+@login_required
 def profile():
-    if 'user_id' not in session:
-        return redirect(url_for('login'))
     db_session = DBSession()
-    user = db_session.query(User).options(joinedload(User.city).joinedload(City.state).joinedload(State.country)).get(session['user_id'])
+    user = db_session.query(User).options(joinedload(User.city).joinedload(City.state).joinedload(State.country)).get(current_user.id)
     db_session.close()
     return render_template('profile.html', user=user)
 
@@ -35,38 +35,37 @@ def register():
     set_password(new_user, password)
     db_session.add(new_user)
     db_session.commit()
-    user_id = new_user.id
+    login_user(new_user)
     db_session.close()
-    session['user_id'] = user_id
+    flash("Cadastro realizado com sucesso!", "success")
     return redirect(url_for('user.profile'))
 
 @user_bp.route("/edituser")
+@login_required
 def editUserPage():
-    if 'user_id' not in session:
-        return redirect(url_for('login'))
     db_session = DBSession()
     cities = db_session.query(City).options(joinedload(City.state)).order_by(City.city_name).all()
-    user = db_session.query(User).options(joinedload(User.city).joinedload(City.state)).get(session['user_id'])
+    user = db_session.query(User).options(joinedload(User.city).joinedload(City.state)).get(current_user.id)
     db_session.close()
     return render_template('editUserPage.html',user=user, cities=cities)
 
 @user_bp.route("/updateuser", methods=["POST"])
+@login_required
 def updateUser():
     name = request.form['name']
     email = request.form['email'].strip()
     city_id = request.form['city_id']
     db_session = DBSession()
-    update_user(db_session, session['user_id'], name=name, email=email, city_id=city_id)
+    update_user(db_session, current_user.id, name=name, email=email, city_id=city_id)
     db_session.close()
     flash("Dados atualizados com sucesso!", "success")
     return redirect(url_for('user.profile'))
 
 @user_bp.route("/deleteAccount", methods=["POST"])
+@login_required
 def deleteAccount():
-    if 'user_id' not in session:
-        return redirect(url_for('login'))
     db_session = DBSession()
-    user = db_session.query(User).get(session['user_id'])
+    user = db_session.query(User).get(current_user.id)
     if user:
         db_session.delete(user)
         db_session.commit()

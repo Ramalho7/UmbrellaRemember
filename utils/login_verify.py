@@ -1,6 +1,6 @@
 from typing import Optional, Type
 from models.model import User
-from models.check_password import check_password
+from utils.check_password import check_password
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
 

@@ -5,6 +5,7 @@ import os
 import requests
 from argon2 import PasswordHasher
 from datetime import datetime, timedelta, timezone
+from flask_login import UserMixin
 
 ph = PasswordHasher()
 
@@ -42,7 +43,7 @@ class City(Base):
     state_id = Column(Integer, ForeignKey('state.id'))
     state = relationship("State", back_populates="cities")
     users = relationship("User", back_populates="city")
-class User(Base):
+class User(Base, UserMixin):
     __tablename__ = 'user'
     id = Column(Integer, primary_key=True)
     name = Column(String(100), nullable=False)
