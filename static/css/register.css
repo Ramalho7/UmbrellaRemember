@@ -1,0 +1,63 @@
+.benefits-section{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.benefits-section h2{
+    margin-bottom: 5vh;
+}
+
+.benefits-cards-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 20vw;    
+}
+
+.benefit-card i{
+    font-size: 2rem;
+    color: #32BC9B;
+    margin-bottom: 2vh;
+}
+
+.benefit-card .benefit-text{
+    font-size: 1.2rem;
+}
+
+.how-it-works-section{
+    margin-top: 5vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.how-it-works-section h2{
+    margin-bottom: 5vh;
+}
+
+.steps-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 20vw;    
+}
+
+.step-card i{
+    font-size: 2rem;
+    color: #32BC9B;
+    margin-bottom: 2vh;
+
+}
+
+.step-card .step-text{
+    font-size: 1.2rem;
+}
+
+
+
+

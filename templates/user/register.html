@@ -1,0 +1,75 @@
+{% extends 'layout.html' %}
+
+{% block title %}Register{% endblock %}
+
+{% block body %}
+
+<div class="form-container">
+    <div class="main_form">
+        <form action="{{url_for('user.registeruser')}}" method="POST">
+            <label for="name">Nome</label>
+            <input id="name" name="name" placeholder="Digite seu nome" required>
+
+            <label for="email">E-mail</label>
+            <input id="email" autocomplete="off" name="email" placeholder="Digite seu e-mail" type="email" required>
+
+            <label for="password">Senha</label>
+            <input id="password" name="password" placeholder="Digite sua senha" type="password" required>
+
+            <label for="city">Cidade</label>
+            <input id="city_input" placeholder="Digite ou selecione sua cidade" oninput="syncCityInput()" required>
+
+            <select id="city_select" name="city_id" onchange="syncCitySelect()">
+                <option value="" disabled selected>Selecione sua cidade</option>
+                {% for city in cities %}
+                <option value="{{ city.id }}">{{ city.city_name }}, {{ city.state.state_name }}</option>
+                {% endfor %}
+            </select>
+
+            <button type="submit">Submit</button>
+            <div class="loginLink">
+                <a href="{{url_for('auth.login')}}">Já possui conta?</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="benefits-section">
+    <h2>Benefícios do Umbrella Remember</h2>
+    <div class="benefits-cards-container">
+        <div class="benefit-card">
+            <i class="fa-solid fa-umbrella"></i>
+            <div class="benefit-text">Alertas de chuvas</div>
+        </div>
+        <div class="benefit-card">
+            <i class="fas fa-cloud-sun"></i>
+            <div class="benefit-text">Previsão do tempo personalizada</div>
+        </div>
+        <div class="benefit-card">
+            <i class="fa-solid fa-users"></i>
+            <div class="benefit-text">Fácil de usar</div>
+        </div>
+    </div>
+</div>
+
+<div class="how-it-works-section">
+    <h2>Como funciona?</h2>
+    <div class="steps-container">
+        <div class="step-card">
+            <i class="fas fa-clipboard-list"></i>
+            <div class="step-text">1. Cadastre-se</div>
+        </div>
+        <div class="step-card">
+            <i class="fas fa-globe"></i>
+            <div class="step-text">2. Escolha sua cidade</div>
+        </div>
+        <div class="step-card">
+            <i class="fas fa-bell"></i>
+            <div class="step-text">3. Receba alertas</div>
+        </div>
+    </div>
+</div>
+
+<script src="../static/syncCityInput.js"></script>
+
+{% endblock %}

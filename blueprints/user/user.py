@@ -20,8 +20,14 @@ def profile():
     db_session.close()
     return render_template('profile.html', user=user)
 
-@user_bp.route("/register", methods=["POST"])
-def register():
+@user_bp.route("/register")
+def registerPage():
+    db_session = DBSession()
+    cities = db_session.query(City).options(joinedload(City.state)).order_by(City.city_name).all()
+    return render_template('register.html', cities=cities)
+
+@user_bp.route("/registeruser", methods=["POST"])
+def registeruser():
     name = request.form['name']
     email = request.form['email'].strip()
     city_id = request.form['city_id']

@@ -4,8 +4,12 @@
     box-sizing: border-box;
 }
 
+:root{
+    --primary-color: #4f46e5;
+    --secondary-color: #3730a3;
+}
+
 body {
-    min-height: 100vh;
     background: #f5f6fa;
     font-family: Arial, sans-serif;
     margin: 0;
@@ -43,7 +47,7 @@ body {
 }
 
 header {
-    background: slateblue;
+    background: var(--primary-color);
     height: 70px;
     width: 100%;
     display: flex;
@@ -71,7 +75,7 @@ header {
     text-decoration: none !important;
     color: #fff !important;
     font-weight: 500 !important;
-    background: #4f46e5 !important;
+    background: var(--secondary-color) !important;
     padding: 8px 24px !important;
     border-radius: 22px !important;
     transition: background 0.18s !important;
@@ -81,7 +85,7 @@ header {
 }
 
 .header-links a:hover {
-    background: #3730a3 !important;
+    background: var(--secondary-color) !important;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12) !important;
 }
 
@@ -146,11 +150,11 @@ input, select {
 }
 
 input:focus, select:focus {
-    border-color: #4f46e5;
+    border-color: var(--primary-color);
 }
 
 button, input[type="submit"] {
-    background: #4f46e5;
+    background: var(--primary-color);
     color: #fff;
     border: none;
     border-radius: 6px;
@@ -162,7 +166,31 @@ button, input[type="submit"] {
 }
 
 button:hover, input[type="submit"]:hover {
-    background: #3730a3;
+    background: var(--secondary-color);
+}
+
+.loginLink a {
+    display: inline-block;
+    color: blue;
+    font-weight: bold;
+    font-size: .8rem;
+    text-align: center;
+}
+
+.loginLink a:hover {
+    color: var(--secondary-color);
+}
+
+.registerLink a {
+    display: inline-block;
+    color: blue;
+    font-weight: bold;
+    font-size: .8rem;
+    text-align: center;
+}
+
+.registerLink a:hover {
+    color: var(--secondary-color);
 }
 
 footer {
@@ -199,4 +227,10 @@ footer img {
     height: 28px;
     vertical-align: middle;
     margin-left: 4px;
+}
+
+.fa-linkedin{
+    font-size:1.7em; 
+    color:#0A66C2; 
+    vertical-align:middle;
 }

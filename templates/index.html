@@ -4,39 +4,40 @@
 
 {% block body %}
 
-<div class="intro-container">
+<div class="main-container">
     <h2>Bem-vindo ao Umbrella Remember!</h2>
-    <p>O Umbrella Remember é a sua plataforma que informa sobre a previsão do tempo, com base na sua localização.
-        Cadastre-se agora e aproveite uma experiência personalizada!</p>
-</div>
-
-<div class="form-container">
-    <div class="main_form">
-        <form action="{{url_for('user.register')}}" method="POST">
-            <label for="name">Nome</label>
-            <input id="name" name="name" placeholder="Digite seu nome" required>
-            
-            <label for="email">E-mail</label>
-            <input id="email" autocomplete="off" name="email" placeholder="Digite seu e-mail" type="email" required>
-            
-            <label for="password">Senha</label>
-            <input id="password" name="password" placeholder="Digite sua senha" type="password" required>
-            
-            <label for="city">Cidade</label>
-            <input id="city_input" placeholder="Digite ou selecione sua cidade" oninput="syncCityInput()" required>
-            
-            <select id="city_select" name="city_id" onchange="syncCitySelect()">
-                <option value="" disabled selected>Selecione sua cidade</option>
-                {% for city in cities %}
-                <option value="{{ city.id }}">{{ city.city_name }}, {{ city.state.state_name }}</option>
-                {% endfor %}
-            </select>
-            
-            <button type="submit">Submit</button>
-        </form>
+    <p>
+        Este projeto nasceu de um simples script para avisar sobre chuva, e evoluiu para uma plataforma com interface gráfica intuitiva!
+    </p>
+    <div class="how-it-works">
+        <h2>Como funciona?</h2>
+        <ol>
+            <li>
+                <strong>Cadastro:</strong> Informe seu nome, e-mail e cidade para começar a receber notificações personalizadas.
+            </li>
+            <li>
+                <strong>Consulta diária:</strong> Todos os dias, às 6h da manhã, o sistema verifica a previsão do tempo para sua cidade.
+            </li>
+            <li>
+                <strong>Notificação:</strong> Se houver previsão de chuva, você recebe um e-mail avisando para levar o guarda-chuva. Se não, aproveite o dia de sol!
+            </li>
+        </ol>
+        <p>
+            Assim, você nunca mais será pego de surpresa pelo tempo!
+        </p>
     </div>
 </div>
 
-<script src="/static/syncCityInput.js"></script>
+<div class="tech-used">
+    <h3>Tecnologias Utilizadas</h3>
+    <ul>
+        <li><i class="fab fa-python"></i> Python</li>
+        <li><i class="fab fa-html5"></i> HTML5</li>
+        <li><i class="fab fa-css3-alt"></i> CSS3</li>
+        <li><i class="fas fa-envelope"></i> SMTP/E-mail</li>
+        <li><i class="fas fa-database"></i> MySQL</li>
+        <li><i class="fas fa-cloud"></i> OpenWeather API</li>
+    </ul>
+</div>
 
 {% endblock %}
